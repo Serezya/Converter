@@ -15,6 +15,10 @@ public class Employee {
         this.age = age;
     }
 
+    public Employee() {
+
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
