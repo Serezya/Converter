@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class App {
@@ -28,9 +29,9 @@ public class App {
         String fileName = "data.csv";
         String fileXML = "data.xml";
         //List<Employee> list = parseCSV(columnMapping, fileName);
-        List<Object> list = new ArrayList<>();
-        parseXML(fileXML, list);
-        listToJson(list);
+        List<Employee> list = new ArrayList<>();
+        parseXML(fileXML, Collections.singletonList(list));
+        listToJson(Collections.singletonList(list));
     }
 
     private static void parseXML(String fileXML, List<Object> list) throws ParserConfigurationException, IOException, SAXException {
@@ -53,7 +54,6 @@ public class App {
             }
         }
     }
-
 
     private static void listToJson(List<Object> list) {
         GsonBuilder builder = new GsonBuilder();

@@ -1,6 +1,10 @@
 package org.example;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+
 import java.io.*;
 
 public class AppTest {
@@ -34,5 +38,17 @@ public class AppTest {
             stringBuilder.append(line);
         }
         return stringBuilder.toString();
+    }
+    @Test
+    public void containsHuman() throws IOException { // Hamcrest // содержание Inav?
+        File file = new File("data.json");
+        String contentFile = getContent(file);
+        assertThat(contentFile, containsString("Inav"));
+    }
+    @Test
+    public void equalsPath() throws IOException { // Hamcrest // Лежат ли файлы в одной директории?
+        File file = new File("data.json");
+        File file2 = new File("data.json");
+        assertThat(file.getAbsolutePath(), equalTo(file2.getAbsolutePath()));
     }
 }
