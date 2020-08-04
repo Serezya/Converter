@@ -29,12 +29,13 @@ public class App {
         String fileName = "data.csv";
         String fileXML = "data.xml";
         //List<Employee> list = parseCSV(columnMapping, fileName);
-        List<Employee> list = new ArrayList<>();
-        parseXML(fileXML, Collections.singletonList(list));
-        listToJson(Collections.singletonList(list));
+
+        List <Employee> list = parseXML(fileXML);
+        listToJson(list);
     }
 
-    private static void parseXML(String fileXML, List<Object> list) throws ParserConfigurationException, IOException, SAXException {
+    private static List<Employee> parseXML(String fileXML) throws ParserConfigurationException, IOException, SAXException {
+        List<Employee> list = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new File(fileXML));
@@ -53,9 +54,10 @@ public class App {
                 list.add(employee);
             }
         }
+        return list;
     }
 
-    private static void listToJson(List<Object> list) {
+    private static void listToJson(List<Employee> list) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writeJsonFile(gson.toJson(list));
