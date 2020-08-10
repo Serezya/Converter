@@ -34,7 +34,7 @@ public class App {
         listToJson(list);
     }
 
-    private static List<Employee> parseXML(String fileXML) throws ParserConfigurationException, IOException, SAXException {
+    public static List<Employee> parseXML(String fileXML) throws ParserConfigurationException, IOException, SAXException {
         List<Employee> list = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -45,7 +45,7 @@ public class App {
             Node node = nodeList.item(i);
             if (Node.ELEMENT_NODE == node.getNodeType()) {
                 Employee employee = new Employee();
-                Element element = (Element) node;  // работа с элементом}
+                Element element = (Element) node;
                 employee.id = Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent());
                 employee.firstName = element.getElementsByTagName("firstName").item(0).getTextContent();
                 employee.lastName = element.getElementsByTagName("lastName").item(0).getTextContent();
@@ -57,13 +57,13 @@ public class App {
         return list;
     }
 
-    private static void listToJson(List<Employee> list) {
+    public static void listToJson(List<Employee> list) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writeJsonFile(gson.toJson(list));
     }
 
-    private static void writeJsonFile(String jsonString) {
+    public static void writeJsonFile(String jsonString) {
         try (FileWriter file = new FileWriter("data2.json")) {
             file.write(jsonString);
             file.flush();
@@ -72,7 +72,7 @@ public class App {
         }
     }
 
-    private static List<Employee> parseCSV(String[] columnMapping, String fileName) {
+    public static List<Employee> parseCSV(String[] columnMapping, String fileName) {
         List<Employee> list = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
             ColumnPositionMappingStrategy<Employee> strategy = new ColumnPositionMappingStrategy<>();

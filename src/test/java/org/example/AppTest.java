@@ -2,53 +2,48 @@ package org.example;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import java.io.*;
+import java.util.List;
 
 public class AppTest {
+
     @org.junit.jupiter.api.Test
     public void existsFile() { // файл существует
-        File file = new File("data.json");
+        App.writeJsonFile("[{\"id\":1,\"firstName\":\"John\",\"lastName\":\"Smith\",\"country\":\"USA\",\"age\":25}," +
+                "{\"id\":2,\"firstName\":\"Inav\",\"lastName\":\"Petrov\",\"country\":\"RU\",\"age\":23}]");
+        File file = new File("data2.json");
         Assertions.assertTrue(file.exists());
     }
 
     @org.junit.jupiter.api.Test
-    public void jsonNotNull() { // файл не пустой
-        File file = new File("data.json");
-        Assertions.assertNotNull(file);
+    public void jsonNotNull() throws IOException, SAXException, ParserConfigurationException { // список не пустой
+        List<Employee> list = App.parseXML("data.xml");
+        Assertions.assertTrue(list.size() > 0);
     }
 
     @org.junit.jupiter.api.Test
-    public void equalsFiles() throws IOException { // сравнение двух json по содержимому
-        File file = new File("data.json");
-        File file2 = new File("data2.json");
-
-        String contentFile1 = getContent(file);
-        String contentFile2 = getContent(file2);
-        Assertions.assertEquals(contentFile1, contentFile2);
+    public void fileNotFound() throws IOException, ParserConfigurationException, SAXException { // некорректный входной файл
+        List<Employee> list = App.parseXML("uncorrect_file.xml");
+        Assertions.assertTrue(list.size() > 0);
     }
 
-    public static String getContent(File file) throws IOException { // считывание файла
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        return stringBuilder.toString();
-    }
     @Test
-    public void containsHuman() throws IOException { // Hamcrest // содержание Inav?
-        File file = new File("data.json");
-        String contentFile = getContent(file);
-        assertThat(contentFile, containsString("Inav"));
+    public void collectionSize() throws IOException, ParserConfigurationException, SAXException { // Hamcrest // размерность
+        List<Employee> listXML = App.parseXML("data.xml");
+        assertThat(listXML, hasSize(2));
     }
+
     @Test
-    public void equalsPath() throws IOException { // Hamcrest // Лежат ли файлы в одной директории?
-        File file = new File("data.json");
-        File file2 = new File("data.json");
-        assertThat(file.getAbsolutePath(), equalTo(file2.getAbsolutePath()));
+    public void haveHuman() { // Hamcrest // Есть ли
+        String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
+        List<Employee> listCSV = App.parseCSV(columnMapping, "data.csv");
+        assertThat(listCSV.get(1).firstName.equals("Inav"), equalTo(true));
     }
 }
